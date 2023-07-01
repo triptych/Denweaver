@@ -1,4 +1,4 @@
-run = "cd my-astro-site; npm run dev"
+run = "cd astro2/nuclear-nadir; npm run dev"
 
 [nix]
 channel = "stable-21_11"
