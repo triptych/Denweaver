@@ -10,6 +10,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "appwrite": "^11.0.0",
     "astro": "^2.7.2",
     "npm": "^9.7.2",
     "pdfjs": "^2.5.0"
