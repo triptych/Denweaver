@@ -95,11 +95,19 @@ const createMessage = (e) => {
 window.addEventListener('DOMContentLoaded', function() {
     // Code to be executed on page load
   
-document.getElementById('testclick').addEventListener('click', function(e) {
+  document.getElementById('testclick').addEventListener('click', function(e) {
     someEvent(e)
     createMessage(e)
-});
+  });
 
 });
 
+// subscribe events
+client.subscribe(`databases.${DATABASE_ID}.collections.${COLLECTION_ID_MESSAGE}.documents`, response => {
+    // Callback will be executed on changes for documents
+    console.log(response);
+    if(response.events.includes("databases.*.collections.*.documents.*.create")){
+      console.log('A message was added!')
+    }
+});
 </script>
