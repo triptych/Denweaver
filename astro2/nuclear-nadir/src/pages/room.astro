@@ -1,0 +1,105 @@
+---
+---
+<style>
+body{
+  background-color: tan;
+}
+
+div  {
+  border: 1px solid red;
+}
+
+.bordered {
+  border: 1px solid red;
+}
+
+.foo {
+font-weight: bold;
+color: blue;
+}
+
+.mybutton {
+border: 1px solid blue;
+color: white;
+background-color: black;
+}
+</style>
+
+Room 
+
+testing 
+
+<p>why doesn't the client work?</p>
+<p>Triggering a redo</p>
+<div id="messages">
+
+</div>
+<hr/>
+<button id="testclick" class='mybutton'> Testing Click</button>
+<input type="text" id='msgbody'/>
+
+
+<script>
+import { Client, Databases, ID, Query } from "appwrite";
+
+const client = new Client();
+const PROJECT_ID = '64a1b20d159e6fafb4f2';
+const DATABASE_ID = '64a9b62bdb31a58d0925';
+const COLLECTION_ID_MESSAGE = '64a9b63f67d854d80f84'
+
+
+client
+    .setEndpoint('https://cloud.appwrite.io/v1') // Your API Endpoint
+    .setProject(PROJECT_ID) // Your project ID
+;
+
+const databases = new Databases(client);
+console.log(databases)
+
+const promise = databases.listDocuments(
+  DATABASE_ID, 
+  COLLECTION_ID_MESSAGE,
+  [
+    Query.orderDesc('$createdAt'),
+    Query.limit(3)
+  ]
+);
+
+promise.then(function (response) {
+    console.log(response); // Success
+    response.documents.forEach((itm, idx, arr)=>{
+      let el = document.createElement('p')
+      el.classList.add('bordered')
+      el.innerHTML = `
+        <span style='display:block;'> id: ${itm.$id}</span>
+        <span class='foo'> created at: ${itm.$createdAt}</span>
+        <b>body: ${itm.body}</b>
+        `
+        document.getElementById('messages').appendChild(el)
+      })
+    }, function (error) {
+      console.log(error); // Failure
+    });
+
+const someEvent = (e) => {
+  console.log('some event', e);
+} 
+
+const createMessage = (e) => {
+  console.log('create message')
+  const msgPromise = databases.createDocument(DATABASE_ID, COLLECTION_ID_MESSAGE, ID.unique(), {
+    body: document.getElementById('msgbody').value
+  })
+
+}
+window.addEventListener('DOMContentLoaded', function() {
+    // Code to be executed on page load
+  
+document.getElementById('testclick').addEventListener('click', function(e) {
+    someEvent(e)
+    createMessage(e)
+});
+
+});
+
+</script>
