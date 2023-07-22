@@ -1,0 +1,66 @@
+---
+---
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.5.2/cdn/themes/light.css" />
+<script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.5.2/cdn/shoelace-autoloader.js"></script>
+
+
+<sl-color-picker></sl-color-picker>
+
+<script>
+  const colorPicker = document.querySelector('sl-color-picker');
+  colorPicker.swatches = ['red', 'orange', 'yellow', 'green', 'blue', 'purple'];
+</script>
+
+
+<sl-button>Button</sl-button>
+
+
+<sl-split-panel>
+  <div
+    slot="start"
+    style="height: 200px; background: var(--sl-color-neutral-50); display: flex; align-items: center; justify-content: center;"
+  >
+    Start
+  </div>
+  <div
+    slot="end"
+    style="height: 200px; background: var(--sl-color-neutral-50); display: flex; align-items: center; justify-content: center;"
+  >
+    End
+  </div>
+</sl-split-panel>
+
+
+<sl-drawer label="Drawer" class="drawer-overview">
+  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  <sl-button slot="footer" variant="primary">Close</sl-button>
+</sl-drawer>
+
+<sl-button>Open Drawer</sl-button>
+
+<script>
+  const drawer = document.querySelector('.drawer-overview');
+  const openButton = drawer.nextElementSibling;
+  const closeButton = drawer.querySelector('sl-button[variant="primary"]');
+
+  openButton.addEventListener('click', () => drawer.show());
+  closeButton.addEventListener('click', () => drawer.hide());
+</script>
+
+<sl-dialog label="Dialog" class="dialog-overview">
+  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  <sl-button slot="footer" variant="primary">Close</sl-button>
+</sl-dialog>
+
+<sl-button>Open Dialog</sl-button>
+
+<script>
+  const dialog = document.querySelector('.dialog-overview');
+  const openButton = dialog.nextElementSibling;
+  const closeButton = dialog.querySelector('sl-button[slot="footer"]');
+
+  openButton.addEventListener('click', () => dialog.show());
+  closeButton.addEventListener('click', () => dialog.hide());
+</script>
+

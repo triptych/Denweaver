@@ -2,3 +2,18 @@ run = "cd astro2/nuclear-nadir; npm run dev"
 
 [nix]
 channel = "stable-21_11"
+
+[languages]
+
+[languages.javascript]
+pattern = "**/{*.js,*.jsx,*.ts,*.tsx}"
+
+[languages.javascript.languageServer]
+start = "typescript-language-server --stdio"
+
+[languages.astro]
+pattern = "**/*.astro"
+  [languages.astro.languageServer]
+start = "vscode-html-language-server --stdio"
+  [languages.asto.languageServer.initializationOptions]
+  provideFormatter = true
