@@ -1,46 +1,75 @@
 ---
-const name = "DenWeaver"
-
-// import "@appwrite.io/pink";
-// import "@appwrite.io/pink-icons";
-
- import "normalize.css"
-import "sakura.css"
 ---
-<body>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.5.2/cdn/themes/light.css" />
+<script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.5.2/cdn/shoelace-autoloader.js"></script>
+
+<div class="main-wrapper">
 <header>
-
-<nav>
-<ul>
-<li><a href="/">Home</a></li>
-<li><a href="/about">About</a></li>
-<li><a href="/login_self">Login</a></li>
-
-
-</ul>
-</nav>
+    <img src="/img/logo2.png" id="denlogo"></img>
+  <nav>
+    <ul>
+      <li>Home</li>
+      <li>About</li>
+      <li>Login</li>
+    </ul>
+  </nav>
+  <h1>Welcome to Denweaver</h1>
 </header>
 <main>
-<h1 class="title">Welcome to {name}</h1>
-
-<p>Nothing is working yet. It's a pile of code with no direction yet. If you are seeing this, beware of dragons.</p>
-
-<ul>
-<li><a href="testing.pdf">Testing.pdf</a> it seems I can generate PDF files from Astro</li>
-<li><a href="/kaboom-test">kaboom</a> I can run Kaboom games!</li>
-<li><a href="/svelte">Svelte in Astro</a></li>
-<li><a href="/quest">Fetch an item from Opera Omnia and display it</a></li>
-<li><a href="/shoelace"> A link to testing out Shoelace components</a></li>
-</ul>
-
-<hr/>
-<h2>Experiments</h2>
-<div class="box">Box element</div>
+<div class="column col-left">
+Left Column
+</div>
+<div class="column col-middle">
+Middle Column
+</div>
+<div class="column col-right">
+Right Column
+</div>
 
 </main>
-</body>
+<footer>
+<a href="https://andreww.xyz">Copyright &copy; 2023 Andrew Wooldridge</a>
+</footer>
+</div>
 
 <style>
+body {
+  background-color: var(--sl-color-neutral-300);
+  background-image: url("/img/bg2.jpg");
+}
+:root{
+  --min-width: 950px;
+}
+.main-wrapper{
+  min-width: var(--min-width);
+  width: var(--min-width);
+  border: 1px solid black;
+  margin: auto;
+  background-color: rgba(255, 255, 255, 0.5);
 
+}
 
+main{
+display: flex;
+flex-direction: row;
+}
+
+.column {
+border: 1px solid black;
+margin: 4px;
+padding: 4px;
+}
+
+.col-middle{
+flex: 5;
+}
+ header{  
+  display: flex;
+  flex-direction: row;
+
+ }
+#denlogo{
+  height: 20%;
+  width: 20%;
+}
 </style>
