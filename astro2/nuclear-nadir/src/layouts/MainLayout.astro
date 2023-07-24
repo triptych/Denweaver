@@ -1,0 +1,33 @@
+---
+export interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+
+import '../../public/style/main.css'
+
+---
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Denweaver is a web based social RPG">
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+
+  <link 
+    rel="stylesheet" 
+    href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.5.2/cdn/themes/light.css" />
+  <script 
+    type="module" 
+    src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.5.2/cdn/shoelace-autoloader.js"></script>
+	</head>
+	<body>
+foo
+		<slot />
+	</body>
+</html>
