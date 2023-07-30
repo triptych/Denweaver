@@ -1,0 +1,33 @@
+---
+import Login from './Login.astro'
+---
+<nav>
+  <ul>
+    <li><a href="/">Home</a></li>
+    <li><a class="login-button" href="#">Login</a></li>
+    <li><a href="/about">About</a></li>
+  </ul>
+</nav>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.5.2/cdn/themes/light.css" />
+<script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.5.2/cdn/shoelace-autoloader.js"></script>
+
+<!-- left hand drawer for login -->
+
+<sl-drawer label="Login/Logout" class="drawer-overview">
+  <Login></Login>
+  <sl-button slot="footer" variant="primary">Close</sl-button>
+</sl-drawer>
+
+<script>
+
+  const drawer = document.querySelector('.drawer-overview');
+console.log('drawer', drawer)
+  const openButton = document.querySelector('.login-button');
+  const closeButton = drawer.querySelector('sl-button[variant="primary"]');
+
+  openButton.addEventListener('click', () => drawer.show());
+  closeButton.addEventListener('click', () => drawer.hide());
+
+
+</script>
