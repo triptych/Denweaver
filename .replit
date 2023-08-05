@@ -13,7 +13,9 @@ start = "typescript-language-server --stdio"
 
 [languages.astro]
 pattern = "**/*.astro"
-  [languages.astro.languageServer]
+
+[languages.astro.languageServer]
 start = "vscode-html-language-server --stdio"
-  [languages.asto.languageServer.initializationOptions]
+
+[languages.astro.languageServer.initializationOptions]
   provideFormatter = true
