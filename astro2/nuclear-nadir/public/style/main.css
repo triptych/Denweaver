@@ -10,7 +10,7 @@ body {
   width: var(--min-width);
   border: 1px solid black;
   margin: auto;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.7);
   border-radius: 10px;
 }
 
@@ -20,14 +20,15 @@ flex-direction: row;
 }
 
 .column {
-border: 2px solid black;
-margin: 4px;
-padding: 4px;
+  border: 2px solid black;
+  margin: 4px;
+  padding: 4px;
   border-radius: 5px;
+  flex: 1;
 }
 
 .col-middle{
-flex: 5;
+  flex: 5;
 }
  header{  
   display: flex;
@@ -39,4 +40,5 @@ flex: 5;
   width: 20%;
   border-radius: 10%;
   margin: 5px;
+  align-self: center;
 }

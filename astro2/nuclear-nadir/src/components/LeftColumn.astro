@@ -1,7 +1,9 @@
 ---
 import Login from './Login.astro'
+import '../../public/style/left_column.css'
 ---
 <nav>
+  <h3>Navigation</h3>
   <ul>
     <li><a href="/">Home</a></li>
     <li><a class="login-button" href="#">Login</a></li>
@@ -32,13 +34,5 @@ console.log('drawer', drawer)
 
 </script>
 <style>
-ul li {
-list-style-type: none;
-margin: 0;
-padding: 0;
-}
-ul{
-margin: 0;
-padding: 0;
-}
+ 
 </style>

@@ -1,0 +1,13 @@
+---
+const response = await fetch("https://api.omg.lol/address/triptych/statuses/latest");
+const data = await response.json();
+const message = data.response.message;
+const content = data.response.status.content;
+
+import '../../public/style/right_column.css'
+---
+<h3 class="links_info">Links</h3>
+<div class="status">
+  <div class='status-hd'>{message}</div>
+  <div class='status-bd'>{content}</div>
+</div>
