@@ -42,6 +42,11 @@
 form {
 border: 1px solid black;
 padding: 6px;
+
+}
+
+.panel {
+  font-family: sans-serif;
 }
 
 </style>
@@ -65,6 +70,7 @@ client
 
 console.log("Client:", client)
 
+// Handle Log In
 const handleUserLogin = (e) => {
   console.log('handleUserLogin')
   e.preventDefault();
@@ -75,11 +81,13 @@ const promise = account.createEmailSession(emailID, pwdID);
 
 promise.then(function (response) {
     console.log(response); // Success
+    location.hash="loggedin"
 }, function (error) {
     console.log(error); // Failure
 });
 }
 
+// Handle Registration
 const handleUserRegistration = (e) =>{
 e.preventDefault();
   console.log('handleUserRegistration')
@@ -97,6 +105,8 @@ promise.then(function (response) {
 });
 
 }
+
+// Handle Log Out
 const handleUserLogout = () => {
   console.log('handleUserLogout');
 const account = new Account(client);
@@ -104,21 +114,26 @@ const promise = account.deleteSession('current');
 
 promise.then(function (response) {
     console.log(response); // Success
+    location.hash="loggedout"
 }, function (error) {
     console.log(error); // Failure
 });
 }
 
+
+// on page load
 window.addEventListener('DOMContentLoaded', function() {
     // Code to be executed on page load
     document.getElementById('login').addEventListener('click', function(e) {
         // Code to be executed when the button is clicked
         handleUserLogin(e);
     });
+
     document.getElementById('register').addEventListener('click', function(e) {
         // Code to be executed when the button is clicked
         handleUserRegistration(e);
     });
+
     document.getElementById('logout').addEventListener('click', function(e) {
         // Code to be executed when the button is clicked
         handleUserLogout(e);
@@ -128,13 +143,19 @@ window.addEventListener('DOMContentLoaded', function() {
   const promise_acct = account.get();
 
 promise_acct.then(function (response) {
-    console.log(response);
-  document.getElementById('curr_user').innerHTML = response.name
-}, function (error) {
-    console.log(error);
-});
+    console.log("get account:",response);
+    document.getElementById('curr_user').innerHTML = response.name;
+    location.hash="loggedin"
+  }, function (error) {
+    console.log("get account:", error);
+  });
     
 
+});
+
+client.subscribe('account', response => {
+    // Callback will be executed on all account events.
+    console.log('account:',response);
 });
 
 </script>

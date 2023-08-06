@@ -1,0 +1,110 @@
+---
+import Login from '../components/Login.astro'
+---
+<style>
+body {
+  background-color: tan;
+  font-family: sans-serif;
+}
+.hidden {
+  display: none;
+}
+</style>
+<div class="main-account">
+  <h1>Your account</h1>
+  <div class="logged-out">
+    You are logged out. Please <a href="javascript:void()" class="login-button">log in</a> to continue.
+  </div>
+  <div class="logged-in hidden">
+    You are logged in as <span class="username">none</span>. Would you like to <a href="javascript:void()" class="logout-button">log out</a>?
+<p>
+Your avatar: <span class="avatar"></span>
+</p>
+  </div>
+</div>
+
+<!-- login overlay -->
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.5.2/cdn/themes/light.css" />
+<script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.5.2/cdn/shoelace-autoloader.js"></script>
+
+<!-- left hand drawer for login -->
+
+<sl-drawer label="Login/Logout" class="drawer-overview">
+  <Login></Login>
+  <sl-button slot="footer" variant="primary">Close</sl-button>
+</sl-drawer>
+
+<script>
+  location.hash="checking"
+  const drawer = document.querySelector('.drawer-overview');
+  console.log('drawer', drawer)
+  const openButton = document.querySelector('.login-button');
+const logoutButton = document.querySelector('.logout-button');
+  const closeButton = drawer.querySelector('sl-button[variant="primary"]');
+  let loggedIn = false;
+  // check for client
+  import { Client, Account, Avatars  } from "appwrite";
+  const client = new Client();
+  client
+    .setEndpoint('https://appwrite.denweaver.com/v1') // Your API Endpoint
+    .setProject(import.meta.env.PUBLIC_PROJECT_ID) // Your project ID
+  ;
+
+  openButton.addEventListener('click', () => drawer.show());
+  logoutButton.addEventListener('click', () => drawer.show());
+  closeButton.addEventListener('click', () => drawer.hide());
+
+  const checkStatus = () =>{
+    console.log('checking status: loggedIn:',loggedIn)
+    const account = new Account(client);
+    const promise = account.get();
+    const avatars = new Avatars(client);
+    
+
+    promise.then(function (response) {
+      console.log('check login:', response);
+      document.querySelector('.username').innerHTML = response.name;
+      // console.log('avatar', avResult)
+      const avResult = avatars.getInitials(response.name, 64,64);
+      document.querySelector('.avatar').innerHTML=`<img src="${avResult.href}" style="background:black;"/>`
+    }, function (error) {
+      console.log('check login:',error);
+  });
+
+    if(loggedIn){
+      document.querySelector('.logged-out').classList.add('hidden');
+      document.querySelector('.logged-in').classList.remove('hidden')
+    } else {
+      document.querySelector('.logged-in').classList.add('hidden');
+      document.querySelector('.logged-out').classList.remove('hidden')
+    }
+  }
+
+window.addEventListener('DOMContentLoaded', function() {
+  checkStatus();
+});
+
+
+window.addEventListener("hashchange", () => {
+    console.log("The hash has changed! hash",location.hash);
+    console.log('drawer', drawer)
+    drawer.hide()
+    if(location.hash==='#loggedin'){
+      loggedIn = true;
+    } else {
+      loggedIn = false;
+    }
+    checkStatus();
+  },
+  false,
+);
+
+
+
+
+
+
+
+</script>
