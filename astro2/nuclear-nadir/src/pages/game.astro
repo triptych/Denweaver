@@ -1,0 +1,71 @@
+---
+
+const game_name = "Denweaver"
+import '../../public/style/main.css'
+---
+<style>
+  .row{
+    border: 1px solid red;
+  }
+
+  .col{
+    height: 64px;
+    width: 64px;
+    border: 1px solid green;
+  }
+</style>
+<div class="main-game">
+  <h2>{game_name}</h2>
+  <div class="grid" style="display: flex; flex-direction: column; max-width: 640px;">
+
+
+  </div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(event) {
+  // code to execute when the DOM is ready
+  console.log('dom content loaded')
+  const grid = document.querySelector('.grid');
+  const rows = new Array(10).fill(1)
+  const cols = new Array(10).fill(1)
+  let grid_html = ``;
+console.log('rows', rows)
+rows.forEach((itm, idx, arr)=>{
+    console.log('row')
+    grid_html= `${grid_html}<div 
+      class='row'
+      data-row=${idx}
+      style='border: 1px solid red; display: flex;'>`
+    cols.forEach((item, index, array)=>{
+      grid_html = `${grid_html}<div 
+        class="col"
+        data-col=${index}
+        style='border: 1px solid green; height: 64px; width: 64px;'></div>`
+    })
+    grid_html = `${grid_html}</div>`
+  })
+
+  grid.innerHTML = grid_html
+
+document.querySelector('.grid').addEventListener('click', (e)=>{
+  console.log('grid click')
+  console.log('e: ', e)
+  console.log('e.target col:', e.target.dataset.col)
+  console.log('e.target.parentNode row', e.target.parentNode.dataset.row)
+  const el = document.querySelector('.grid').querySelectorAll('div')
+  console.log('el', el)
+  el.forEach((itm,idx,list)=>{
+  itm.classList.remove('grid-selected')
+  })
+  e.target.classList.add('grid-selected')
+  sendUpdate(e.target.dataset.col, e.target.parentNode.dataset.row )
+})
+});
+
+
+const sendUpdate = (x,y) => {
+  console.log('send update x:', x, 'y:', y)
+}
+</script>

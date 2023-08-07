@@ -42,3 +42,7 @@ flex-direction: row;
   margin: 5px;
   align-self: center;
 }
+
+.grid-selected {
+  background-color: #000;
+}
