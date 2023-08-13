@@ -1,11 +1,19 @@
 ---
+import  CommonLayout from '../layouts/CommonLayout.astro'
 import Login from '../components/Login.astro'
+import SmallHeader from '../components/SmallHeader.astro'
 ---
-<style>
-body {
-  background-color: tan;
-  font-family: sans-serif;
-}
+
+<CommonLayout title= "Denweaver - Account">
+<div class="main-wrapper">
+  <SmallHeader></SmallHeader>
+
+
+  <style>
+    body {
+      background-color: tan;
+      font-family: sans-serif;
+    }
 .hidden {
   display: none;
 }
@@ -108,3 +116,5 @@ window.addEventListener("hashchange", () => {
 
 
 </script>
+</div>
+</CommonLayout>
