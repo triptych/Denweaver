@@ -51,3 +51,8 @@ flex-direction: row;
 .grid-selected {
   background-color: #000;
 }
+
+.hidden {
+  display: none;
+  visibility: hidden;
+}

@@ -14,20 +14,26 @@ import SmallHeader from '../components/SmallHeader.astro'
       background-color: tan;
       font-family: sans-serif;
     }
-.hidden {
-  display: none;
-}
+    .hidden {
+      display: none;
+    }
+  .username {
+    font-weight: bold;
+  }
 </style>
 <div class="main-account">
   <h1>Your account</h1>
   <div class="logged-out">
-    You are logged out. Please <a href="javascript:void()" class="login-button">log in</a> to continue.
+    You are logged out. 
+    Please <a href="javascript:void()" class="login-button">log in</a> to continue.
   </div>
   <div class="logged-in hidden">
-    You are logged in as <span class="username">none</span>. Would you like to <a href="javascript:void()" class="logout-button">log out</a>?
+    You are logged in as <span class="username">none</span>. 
+    Would you like to <a href="javascript:void()" class="logout-button">log out</a>?
 <p>
-Your avatar: <span class="avatar"></span>
+  Your avatar: <span class="avatar"></span>
 </p>
+
   </div>
 </div>
 

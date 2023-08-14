@@ -1,0 +1,27 @@
+---
+// import css
+import ManageAdventure from './ManageAdventure.astro'
+---
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.5.2/cdn/themes/light.css" />
+<script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.5.2/cdn/shoelace-autoloader.js"></script>
+
+Click <b class="clk-adv-panel">here</b> to manage / start </b> your adventure! 
+
+<div class="adv-panel">
+  <sl-drawer label="Adventure Setup" class="drawer-overview">
+    <ManageAdventure></ManageAdventure>
+    <sl-button slot="footer" variant="primary">Close</sl-button>
+  </sl-drawer>
+</div>
+<script>
+  const adv_drawer = document.querySelector('.adv-panel .drawer-overview');
+console.log('adv_drawer', adv_drawer)
+  const adv_openButton = document.querySelector('.clk-adv-panel');
+  const adv_closeButton = adv_drawer.querySelector('.adv-panel sl-button[variant="primary"]');
+
+  adv_openButton.addEventListener('click', () => adv_drawer.show());
+  adv_closeButton.addEventListener('click', () => adv_drawer.hide());
+
+
+
+</script>

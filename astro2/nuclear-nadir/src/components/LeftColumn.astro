@@ -6,7 +6,7 @@ import '../../public/style/left_column.css'
   <h3>Navigation</h3>
   <ul>
     <li><a href="/">Home</a></li>
-    <li><a class="login-button" href="javascript:void()">Login</a></li>
+    <li><a class="login-button" href="javascript:void(0)">Login</a></li>
     <li><a href="/about">About</a></li>
     <li><a href="/account">Account</a></li>
     <li><a href="/game">Game</a></li>
@@ -18,17 +18,18 @@ import '../../public/style/left_column.css'
 
 <!-- left hand drawer for login -->
 
+<div class="login-panel">
 <sl-drawer label="Login/Logout" class="drawer-overview">
   <Login></Login>
   <sl-button slot="footer" variant="primary">Close</sl-button>
 </sl-drawer>
-
+</div>
 <script>
 
-  const drawer = document.querySelector('.drawer-overview');
+  const drawer = document.querySelector('.login-panel .drawer-overview');
 console.log('drawer', drawer)
   const openButton = document.querySelector('.login-button');
-  const closeButton = drawer.querySelector('sl-button[variant="primary"]');
+  const closeButton = drawer.querySelector('.login-panel sl-button[variant="primary"]');
 
   openButton.addEventListener('click', () => drawer.show());
   closeButton.addEventListener('click', () => drawer.hide());
