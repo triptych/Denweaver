@@ -6,7 +6,7 @@ Every new repl comes with a `.replit` and a `replit.nix` file that let you confi
 
 Every new repl is now a Nix repl, which means you can install any package available on Nix, and support any number of languages in a single repl. You can search for a list of available packages [here](https://search.nixos.org/packages).
 
-The `replit.nix` file should look something like the example below. The `deps` array specifies which Nix packages you would like to be available in your environment. 
+The `replit.nix` file should look something like the example below. The `deps` array specifies which Nix packages you would like to be available in your environment.
 
 ```nix
 { pkgs }: {
@@ -64,7 +64,7 @@ language = "rust"
   # Enabled package guessing
   guessImports = false
 
-# Per language configuration: language.<lang name> 
+# Per language configuration: language.<lang name>
 [languages.rust]
 # The glob pattern to match files for this programming language
 pattern = "**/*.rs"
@@ -74,7 +74,7 @@ pattern = "**/*.rs"
     start = ["rust-analyzer"]
 ```
 
-In the code above, the strings in the array assigned to `run` are executed in order in the shell whenever you hit the "Run" button. 
+In the code above, the strings in the array assigned to `run` are executed in order in the shell whenever you hit the "Run" button.
 
 The `language` configuration option helps the IDE understand how to provide features like [packaging](https://blog.replit.com/upm) and [code intelligence](https://blog.replit.com/intel).
 
@@ -175,3 +175,6 @@ A `Command` can either be a string or a list of strings. If the `Command` is a s
 ##### [Java](https://replit.com/@replit/Java-Beta?v=1#.replit)
 ##### [Node.js](https://replit.com/@replit/Nodejs?v=1#.replit)
 ##### [C++](https://replit.com/@replit/CPlusPlus?v=1)
+
+
+testing changes
