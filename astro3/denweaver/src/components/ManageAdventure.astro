@@ -1,0 +1,60 @@
+---
+---
+<div class="no-adventure">
+  <p>You have no adventure set up yet.</p>
+  <p>Let's set one up!</p>
+  <p><label for="adv-charname">Character name</label><input   
+    type="text" id="adv-charname"/></p>
+  <p><label for="adv-chardesc">Character description</label>
+  <textarea id="adv-chardesc" rows="10" cols="50"></textarea></p>
+  <sl-button variant="primary" id="adv-submit-profile" outline>Submit</sl-button>
+</div>
+<div class="yes-adventure">
+  You have an adventure already set up! Someday you'll be able to edit it.
+</div>
+
+<script>
+import { Client, Databases, ID, Query, Account } from "appwrite";
+
+const client = new Client();
+
+client
+    .setEndpoint('https://appwrite.denweaver.com/v1') // Your API Endpoint
+    .setProject(import.meta.env.PUBLIC_PROJECT_ID) // Your project ID
+;
+console.log('client from manageadventure.astro', client)
+
+const databases = new Databases(client);
+/**
+
+**/
+window.addEventListener("DOMContentLoaded" , ()=>{
+  document.querySelector('#adv-submit-profile').addEventListener('click', ()=>{
+
+
+
+const adv_create_promise = databases.createDocument(
+  import.meta.env.PUBLIC_DATABASE_ID,
+  import.meta.env.PUBLIC_COLLECTION_ID_PROFILES,
+  ID.unique(), 
+  {
+    char_name: 'foopy',
+    level: 3,
+    xp: 0,
+    desc: "Foopy is a great guy"
+  }
+);
+
+adv_create_promise.then(function (response) {
+    console.log('adv_create_response:', response); // Success
+}, function (error) {
+    console.log(error); // Failure
+});
+
+
+  })
+});
+
+
+</script>
+

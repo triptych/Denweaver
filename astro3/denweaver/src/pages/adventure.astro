@@ -1,0 +1,80 @@
+---
+import  CommonLayout from '../layouts/CommonLayout.astro'
+import Login from '../components/Login.astro'
+import SmallHeader from '../components/SmallHeader.astro'
+import LeftColumn from '../components/LeftColumn.astro'
+import '../../public/js/client.js'
+import AdvPanel from '../components/AdvPanel.astro'
+---
+
+<CommonLayout title= "Denweaver - Account">
+<div class="main-wrapper">
+  <SmallHeader></SmallHeader>
+<main>
+  <div class="left"><LeftColumn></LeftColumn></div>
+  <div class="middle">
+  <h2>Denweaver Adventure</h2>
+  <p> Eventually, you'll be able to set up your adventure here! </p>
+<div class="loggedout">
+  You are logged out, please log in via the link on the left.
+</div>
+<div class="loggedin hidden">
+  <div class="no-adventure">
+    <p>You currently have not started your adventure.</p>
+    <AdvPanel></AdvPanel>
+  </div>
+  <div class="adventure hidden">
+    <h3>Your Adventure</h3>
+    <p>You have started your adventure! Come back every day for more activities!</p>
+  </div>
+</div>
+</div>
+<div class="right"></div>
+</main>
+
+</div>
+</CommonLayout>
+
+<script>
+  location.hash="checking"
+  import {client, account} from '../../public/js/client.js';
+  console.log('client in adventure.astro:', client)
+  console.log('account in adventure.astro', account)
+  const promise_acct = account.get()
+promise_acct.then(function (response) {
+    console.log('acct get response:', response); // Success
+}, function (error) {
+    console.log('acct get response err', error); // Failure
+});
+
+
+const setAdventureState = (state) => {
+  if(state){
+    document.querySelector('.no-adventure').classList.add('hidden')
+    document.querySelector('.adventure').classList.remove('hidden')
+  } else {
+    document.querySelector('.no-adventure').classList.remove('hidden')
+    document.querySelector('.adventure').classList.add('hidden')
+  }
+}
+
+const setLoggedInState = (state) => {
+  if(state){
+    document.querySelector(".loggedout").classList.add('hidden')
+    document.querySelector(".loggedin").classList.remove('hidden')
+  } else {
+    document.querySelector(".loggedout").classList.remove('hidden')
+    document.querySelector(".loggedin").classList.add('hidden')
+  }
+}
+
+window.addEventListener("hashchange", ()=>{
+    if(location.hash==='#loggedin'){
+      //loggedIn = true;
+      setLoggedInState(true);
+    } else {
+      //loggedIn = false;
+      setLoggedInState(false);
+    }
+})
+</script>

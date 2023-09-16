@@ -1,0 +1,159 @@
+---
+---
+
+<div class="panel">
+  <h2>Login to Denweaver</h2>
+  <div class="user">
+    Logged in user: <i id='curr_user'>none</i>
+    <button id='logout'>Logout</button>
+  </div>
+  <div class="auth">
+    <h3>Login</h3>
+    <form>
+      <label for="email">Email: </label>
+      <input type="email" id='email' name="email" required
+        placeholder="enter your email"/>
+      <br/>
+      <label for="password">Password: </label>
+      <input type="password" id="password" name="password" required
+        placeholder="enter your password"/>
+      <button id="login">Login</button>
+    </form>
+    <hr/>
+    <h3>Register</h3>
+    <form>
+      <label for="regemail">Email:</label>
+      <input type="email" id="regemail" name="regemail" required
+        placeholder="enter your email ..."/><br/>
+      <label for="regpwd">Password:</label>
+      <input type="password" id="regpwd" name="regpwd" required
+        placeholder="enter your password ..."/>
+      <br/>
+      <label for="regname">Username: </label>
+      <input type="text" id="regname" name="regname"
+        placeholder="enter a username"/>
+      <button id="register">Register</button>
+    </form>
+  </div>
+</div>
+
+<style>
+  form {
+    border: 1px solid black;
+    padding: 6px;
+  }
+
+  .panel {
+    font-family: sans-serif;
+  }
+</style>
+
+
+<script>
+import { Client, Databases, ID, Query, Account } from "appwrite";
+
+const client = new Client();
+// const PROJECT_ID = '64a1b20d159e6fafb4f2';
+//const DATABASE_ID = '64a9b62bdb31a58d0925';
+// const COLLECTION_ID_MESSAGE = '64a9b63f67d854d80f84'
+
+
+
+client
+    .setEndpoint('https://appwrite.denweaver.com/v1') // Your API Endpoint
+    .setProject(import.meta.env.PUBLIC_PROJECT_ID) // Your project ID
+;
+
+
+console.log("Client:", client)
+
+// Handle Log In
+const handleUserLogin = (e) => {
+  console.log('handleUserLogin')
+  e.preventDefault();
+const account = new Account(client);
+const emailID = document.getElementById('email').value;
+const pwdID = document.getElementById('password').value
+const promise = account.createEmailSession(emailID, pwdID);
+
+promise.then(function (response) {
+    console.log(response); // Success
+    location.hash="loggedin"
+}, function (error) {
+    console.log(error); // Failure
+});
+}
+
+// Handle Registration
+const handleUserRegistration = (e) =>{
+e.preventDefault();
+  console.log('handleUserRegistration')
+const account = new Account(client);
+
+const regid = document.getElementById('regname').value
+const regemail = document.getElementById('regemail').value
+const regpwd = document.getElementById('regpwd').value
+const promise = account.create(ID.unique(), regemail, regpwd, regid);
+
+promise.then(function (response) {
+    console.log(response); // Success
+}, function (error) {
+    console.log(error); // Failure
+});
+
+}
+
+// Handle Log Out
+const handleUserLogout = () => {
+  console.log('handleUserLogout');
+const account = new Account(client);
+const promise = account.deleteSession('current');
+
+promise.then(function (response) {
+    console.log(response); // Success
+    location.hash="loggedout"
+}, function (error) {
+    console.log(error); // Failure
+});
+}
+
+
+// on page load
+window.addEventListener('DOMContentLoaded', function() {
+    // Code to be executed on page load
+    document.getElementById('login').addEventListener('click', function(e) {
+        // Code to be executed when the button is clicked
+        handleUserLogin(e);
+    });
+
+    document.getElementById('register').addEventListener('click', function(e) {
+        // Code to be executed when the button is clicked
+        handleUserRegistration(e);
+    });
+
+    document.getElementById('logout').addEventListener('click', function(e) {
+        // Code to be executed when the button is clicked
+        handleUserLogout(e);
+    });
+
+  const account = new Account(client);
+  const promise_acct = account.get();
+
+promise_acct.then(function (response) {
+    console.log("get account:",response);
+    document.getElementById('curr_user').innerHTML = response.name;
+    location.hash="loggedin"
+  }, function (error) {
+    console.log("get account error:", error);
+    location.hash="loggedout"
+  });
+    
+
+});
+
+client.subscribe('account', response => {
+    // Callback will be executed on all account events.
+    console.log('account:',response);
+});
+
+</script>

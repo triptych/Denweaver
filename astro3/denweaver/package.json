@@ -12,7 +12,11 @@
   "dependencies": {
     "@astrojs/netlify": "^3.0.1",
     "@astrojs/svelte": "^4.0.2",
+    "appwrite": "^13.0.0",
     "astro": "^3.1.0",
+    "normalize.css": "^8.0.1",
+    "pdfjs": "^2.5.2",
+    "sakura.css": "^1.5.0",
     "svelte": "^4.2.0"
   }
 }

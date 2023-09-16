@@ -1,0 +1,146 @@
+---
+
+const game_name = "Denweaver"
+import '../../public/style/main.css'
+import  CommonLayout from '../layouts/CommonLayout.astro'
+---
+
+
+<CommonLayout title="Dreamweaver - Game">
+
+
+
+
+
+<style>
+  .row{
+    border: 1px solid red;
+  }
+
+  .col{
+    height: 64px;
+    width: 64px;
+    border: 1px solid green;
+  }
+</style>
+<div class="main-game">
+  <h2>{game_name}</h2>
+<p> Nothing to see here yet! </p>
+  <div class="grid" style="display: flex; flex-direction: column; max-width: 640px;">
+
+
+  </div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(event) {
+  // code to execute when the DOM is ready
+  console.log('dom content loaded')
+  const grid = document.querySelector('.grid');
+  const rows = new Array(10).fill(1)
+  const cols = new Array(10).fill(1)
+  let grid_html = ``;
+console.log('rows', rows)
+rows.forEach((itm, idx, arr)=>{
+    console.log('row')
+    grid_html= `${grid_html}<div 
+      class='row'
+      data-row=${idx}
+      style='border: 1px solid red; display: flex;'>`
+    cols.forEach((item, index, array)=>{
+      grid_html = `${grid_html}<div 
+        class="col"
+        data-col=${index}
+        style='border: 1px solid green; height: 64px; width: 64px;'></div>`
+    })
+    grid_html = `${grid_html}</div>`
+  })
+
+  grid.innerHTML = grid_html
+
+document.querySelector('.grid').addEventListener('click', (e)=>{
+  console.log('grid click')
+  console.log('e: ', e)
+  console.log('e.target col:', e.target.dataset.col)
+  console.log('e.target.parentNode row', e.target.parentNode.dataset.row)
+  const el = document.querySelector('.grid').querySelectorAll('div')
+  console.log('el', el)
+  el.forEach((itm,idx,list)=>{
+  itm.classList.remove('grid-selected')
+  })
+  e.target.classList.add('grid-selected')
+  sendUpdate(e.target.dataset.col, e.target.parentNode.dataset.row )
+})
+
+
+// subscribe 
+
+client.subscribe(`databases.${import.meta.env.PUBLIC_DATABASE_ID}.collections.${import.meta.env.PUBLIC_COLLECTION_ID_MOVEMENTS}.documents`, response => {
+    // Callback will be executed on changes for documents
+    console.log(response);
+    console.log("payload x and y", response.payload.x, response.payload.y)
+  setXY(response.payload.x,response.payload.y)
+    if(response.events.includes("databases.*.collections.*.documents.*.create")){
+      console.log('A message was added!')
+    }
+});
+
+});
+
+
+const sendUpdate = (x,y) => {
+  console.log('send update x:', x, 'y:', y)
+  databases.updateDocument(
+  import.meta.env.PUBLIC_DATABASE_ID, 
+  import.meta.env.PUBLIC_COLLECTION_ID_MOVEMENTS,
+  "64cfcdf889619c954962",
+  {x:x, y:y}
+  )
+}
+
+// -----
+
+import { Client, Databases, ID, Query } from "appwrite";
+
+const client = new Client();
+
+
+
+client
+    .setEndpoint('https://appwrite.denweaver.com/v1') // Your API Endpoint
+    .setProject(import.meta.env.PUBLIC_PROJECT_ID) // Your project ID
+;
+
+const databases = new Databases(client);
+console.log(databases);
+
+const docpromise = databases.getDocument(
+  import.meta.env.PUBLIC_DATABASE_ID, 
+  import.meta.env.PUBLIC_COLLECTION_ID_MOVEMENTS,
+  "64cfcdf889619c954962"
+)
+
+docpromise.then((response)=>{
+  console.log('movement response:', response)
+  console.log('x and y', {x: response.x, y: response.y})
+})
+
+
+const setXY = (x,y) =>{
+
+  const el = document.querySelector('.grid').querySelectorAll('div');
+console.log("el", el)
+  el.forEach((itm,idx,list)=>{
+    itm.classList.remove('grid-selected')
+  });
+
+  let foo = document.querySelector(`[data-row="${y}"]`).querySelector(`[data-col="${x}"]`).classList.add('grid-selected')
+
+console.log(foo)
+
+}
+
+
+</script>
+</CommonLayout>

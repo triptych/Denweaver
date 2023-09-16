@@ -1,0 +1,36 @@
+---
+
+---
+<script>
+import { Client, Account, ID } from "appwrite";
+
+const client = new Client()
+    .setEndpoint('https://cloud.appwrite.io/v1') // Your API Endpoint
+    .setProject('64a1b20d159e6fafb4f2');               // Your project ID
+
+const account = new Account(client);
+
+// Register User
+account.create(
+    ID.unique(),
+    'me23434@example.com',
+    'password',
+    'Jane Doe'
+).then(response => {
+    console.log(response);
+}, error => {
+    console.log(error);
+});
+
+// Subscribe to files channel
+client.subscribe('files', response => {
+    if(response.events.includes('buckets.*.files.*.create')) {
+        // Log when a new file is uploaded
+        console.log(response.payload);
+    }
+});
+
+
+
+</script>
+<h1>Testing App ID</h1>

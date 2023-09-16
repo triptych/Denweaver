@@ -1,0 +1,116 @@
+---
+---
+<style>
+body{
+  background-color: tan;
+}
+
+div  {
+  border: 1px solid red;
+}
+
+.bordered {
+  border: 1px solid red;
+}
+
+.foo {
+font-weight: bold;
+color: blue;
+}
+
+.mybutton {
+border: 1px solid blue;
+color: white;
+background-color: black;
+}
+</style>
+
+Room 
+
+testing 
+
+<p>why doesn't the client work?</p>
+<p>Triggering a redo</p>
+<div id="messages">
+
+</div>
+<hr/>
+<button id="testclick" class='mybutton'> Testing Click</button>
+<input type="text" id='msgbody'/>
+
+
+<script>
+import { Client, Databases, ID, Query } from "appwrite";
+
+const client = new Client();
+
+
+
+client
+    .setEndpoint('https://appwrite.denweaver.com/v1') // Your API Endpoint
+    .setProject(import.meta.env.PUBLIC_PROJECT_ID) // Your project ID
+;
+
+const databases = new Databases(client);
+console.log(databases)
+
+const promise = databases.listDocuments(
+  import.meta.env.PUBLIC_DATABASE_ID, 
+  import.meta.env.PUBLIC_COLLECTION_ID_MESSAGE,
+  [
+    Query.orderDesc('$createdAt'),
+    Query.limit(3)
+  ]
+);
+
+promise.then(function (response) {
+    console.log(response); // Success
+    response.documents.forEach((itm, idx, arr)=>{
+      let el = document.createElement('p')
+      el.classList.add('bordered')
+      el.innerHTML = `
+        <span style='display:block;'> id: ${itm.$id}</span>
+        <span class='foo'> created at: ${itm.$createdAt}</span>
+        <b>body: ${itm.body}</b>
+        `
+        document.getElementById('messages').appendChild(el)
+      })
+    }, function (error) {
+      console.log(error); // Failure
+    });
+
+const someEvent = (e) => {
+  console.log('some event', e);
+} 
+
+const createMessage = (e) => {
+  console.log('create message')
+  const msgPromise = databases.createDocument(import.meta.env.PUBLIC_DATABASE_ID, import.meta.env.PUBLIC_COLLECTION_ID_MESSAGE, ID.unique(), {
+    body: document.getElementById('msgbody').value
+  })
+
+}
+window.addEventListener('DOMContentLoaded', function() {
+    // Code to be executed on page load
+  
+  document.getElementById('testclick').addEventListener('click', function(e) {
+    someEvent(e)
+    createMessage(e)
+  });
+
+});
+
+// subscribe events
+client.subscribe(`databases.${import.meta.env.PUBLIC_DATABASE_ID}.collections.${import.meta.env.PUBLIC_COLLECTION_ID_MESSAGE}.documents`, response => {
+    // Callback will be executed on changes for documents
+    console.log(response);
+    if(response.events.includes("databases.*.collections.*.documents.*.create")){
+      console.log('A message was added!')
+    }
+});
+
+console.log(import.meta.env.PUBLIC_FOO)
+console.log("bar:", import.meta.env.BAR)
+
+
+</script>

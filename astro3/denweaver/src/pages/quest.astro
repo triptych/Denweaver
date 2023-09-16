@@ -1,0 +1,8 @@
+---
+const response = await fetch('https://raw.githubusercontent.com/triptych/opera-omnia/main/src/items/treasure.json')
+const data = await response.json();
+const item = data.items[0];
+---
+
+<h1>Fetch Test!</h1>
+<b>First item: {item}</b>
