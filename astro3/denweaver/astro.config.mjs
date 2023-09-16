@@ -1,4 +1,4 @@
-import { defineConfig } from 'astro/config';
+import { defineConfig } from "astro/config";
 import svelte from "@astrojs/svelte";
 
 import netlify from "@astrojs/netlify/functions";
@@ -7,5 +7,10 @@ import netlify from "@astrojs/netlify/functions";
 export default defineConfig({
   integrations: [svelte()],
   output: "server",
-  adapter: netlify()
+  server: {
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+    },
+  },
+  adapter: netlify(),
 });
