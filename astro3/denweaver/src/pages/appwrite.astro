@@ -8,7 +8,10 @@
   const client = new Client()
     // .setEndpoint('https://cloud.appwrite.io/v1') // Your API Endpoint
     .setEndpoint("https://appwrite.denweaver.com/v1")
-    .setProject("64a1b20d159e6fafb4f2"); // Your project ID
+    // .setProject("64a1b20d159e6fafb4f2"); // Your project ID
+    .setProject(import.meta.env.PUBLIC_PROJECT_ID);
+
+  console.log("project ID", import.meta.env.PUBLIC_PROJECT_ID);
 
   const account = new Account(client);
 
