@@ -1,7 +1,8 @@
 ---
-import Login from './Login.astro'
-import '../../public/style/left_column.css'
+import Login from "./Login.astro";
+import "../../public/style/left_column.css";
 ---
+
 <nav>
   <h3>Navigation</h3>
   <ul>
@@ -13,31 +14,36 @@ import '../../public/style/left_column.css'
   </ul>
 </nav>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.5.2/cdn/themes/light.css" />
-<script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.5.2/cdn/shoelace-autoloader.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.5.2/cdn/themes/light.css"
+/>
+<script
+  type="module"
+  src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.5.2/cdn/shoelace-autoloader.js"
+></script>
 
 <!-- left hand drawer for login -->
 
 <div class="login-panel">
-<sl-drawer label="Login/Logout" class="drawer-overview">
-  <Login></Login>
-  <sl-button slot="footer" variant="primary">Close</sl-button>
-</sl-drawer>
+  <sl-drawer label="Login/Logout" class="drawer-overview">
+    <Login />
+    <sl-button slot="footer" variant="primary">Close</sl-button>
+  </sl-drawer>
 </div>
 <script>
+  const drawer = document.querySelector(".login-panel .drawer-overview");
+  console.log("drawer", drawer);
+  const openButton = document.querySelector(".login-button");
+  const closeButton = drawer.querySelector(
+    '.login-panel sl-button[variant="primary"]'
+  );
 
-  const drawer = document.querySelector('.login-panel .drawer-overview');
-console.log('drawer', drawer)
-  const openButton = document.querySelector('.login-button');
-  const closeButton = drawer.querySelector('.login-panel sl-button[variant="primary"]');
-
-  openButton.addEventListener('click', () => drawer.show());
-  closeButton.addEventListener('click', () => drawer.hide());
-
-
+  openButton.addEventListener("click", () => drawer.show());
+  closeButton.addEventListener("click", () => drawer.hide());
 </script>
 <style>
- .drawer-overview{
+  .drawer-overview {
     font-family: sans-serif;
- }
+  }
 </style>

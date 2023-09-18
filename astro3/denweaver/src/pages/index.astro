@@ -14,22 +14,27 @@ let title = "Denweaver";
   <div class="main-wrapper">
     <header>
       <img src="/img/logo2.png" id="denlogo" />
+      <img src="/img/Denweaver.png" id="dentitle" />
     </header>
     <!-- <h1>{title}</h1> -->
-    <img src="/img/Denweaver.png" id="dentitle" />
   </div>
+  <main>
+    <div class="column col-left">
+      <LeftColumn />
+    </div>
+    <div class="column col-middle">
+      <News />
+    </div>
+    <div class="column col-right">
+      <RightColumn />
+    </div>
+  </main>
+  <Footer />
 </MainLayout>
-<main>
-  <div class="column col-left">
-    <LeftColumn />
-  </div>
-  <div class="column col-middle">
-    <News />
-  </div>
-  <div class="column col-right">
-    <RightColumn />
-  </div>
-</main>
-<Footer />
 
-<style></style>
+<style>
+  .col-left,
+  .col-right {
+    background-color: tan;
+  }
+</style>
