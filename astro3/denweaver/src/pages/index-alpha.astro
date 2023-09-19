@@ -1,0 +1,40 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+import Footer from "../components/Footer.html";
+import News from "../components/News.astro";
+import LeftColumn from "../components/LeftColumn.astro";
+import RightColumn from "../components/RightColumn.astro";
+
+//import { getCollection } from 'astro:content';
+//const newsEntries = await getCollection('news');
+let title = "Denweaver";
+---
+
+<MainLayout title="Denweaver - Main">
+  <div class="main-wrapper">
+    <header>
+      <img src="/img/logo2.png" id="denlogo" />
+      <img src="/img/Denweaver.png" id="dentitle" />
+    </header>
+    <!-- <h1>{title}</h1> -->
+  </div>
+  <main>
+    <div class="column col-left">
+      <LeftColumn />
+    </div>
+    <div class="column col-middle">
+      <News />
+    </div>
+    <div class="column col-right">
+      <RightColumn />
+    </div>
+  </main>
+  <Footer />
+</MainLayout>
+
+<style>
+  .col-left,
+  .col-right {
+    background-color: tan;
+  }
+</style>
