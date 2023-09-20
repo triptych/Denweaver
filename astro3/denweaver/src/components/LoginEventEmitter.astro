@@ -1,0 +1,28 @@
+---
+
+---
+
+<script>
+  import { Client, Databases, ID, Query, Account } from "appwrite";
+  import Cookies from "js-cookie";
+  console.log("cookies", Cookies);
+  class LoginStatus extends EventTarget {
+    _loggedIn;
+    constructor(isLoggedIn) {
+      super();
+      this._loggedIn = isLoggedIn;
+    }
+  }
+
+  const client = new Client();
+  console.log("client:", client);
+
+  client
+    .setEndpoint("https://appwrite.denweaver.com/v1") // Your API Endpoint
+    .setProject(import.meta.env.PUBLIC_PROJECT_ID); // Your project ID
+
+  Cookies.set("loggedIn", "false");
+  console.log(Cookies.get("loggedIn"));
+</script>
+
+<p>Login - event emitter version</p>
