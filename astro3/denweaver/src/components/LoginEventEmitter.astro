@@ -2,27 +2,306 @@
 
 ---
 
+<script></script>
+
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.8.0/cdn/themes/light.css"
+/>
+<script
+  type="module"
+  src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.8.0/cdn/shoelace-autoloader.js"
+></script>
+
+<div class="denweaver-account">
+  <div class="loggedin">
+    Username: <span id="c_user">none</span> - <button class="logout-button"
+      >Logout</button
+    >
+  </div>
+  <div class="loggedout">
+    <button class="login-button">Login / Register</button>
+  </div>
+</div>
+
+<div class="login-panel">
+  <sl-drawer label="Login/Logout" class="drawer-overview">
+    <div class="panel">
+      <h2>Login to Denweaver</h2>
+      <div class="user">
+        Logged in user: <i id="curr_user">none</i>
+        <button id="logout">Logout</button>
+      </div>
+      <div class="auth">
+        <h3>Login</h3>
+        <form>
+          <label for="email">Email:</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            placeholder="enter your email"
+          />
+          <br />
+          <label for="password">Password:</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            required
+            placeholder="enter your password"
+          />
+          <button id="login">Login</button>
+        </form>
+        <hr />
+        <h3>Register</h3>
+        <form>
+          <label for="regemail">Email:</label>
+          <input
+            type="email"
+            id="regemail"
+            name="regemail"
+            required
+            placeholder="enter your email ..."
+          /><br />
+          <label for="regpwd">Password:</label>
+          <input
+            type="password"
+            id="regpwd"
+            name="regpwd"
+            required
+            placeholder="enter your password ..."
+          />
+          <br />
+          <label for="regname">Username:</label>
+          <input
+            type="text"
+            id="regname"
+            name="regname"
+            placeholder="enter a username"
+          />
+          <button id="register">Register</button>
+        </form>
+      </div>
+    </div>
+
+    <sl-button slot="footer" variant="primary">Close</sl-button>
+  </sl-drawer>
+</div>
 <script>
+  const drawer = document.querySelector(".login-panel .drawer-overview");
+  console.log("drawer", drawer);
+  const openButton = document.querySelector(".login-button");
+  const openButton2 = document.querySelector(".logout-button");
+  const closeButton = drawer.querySelector(
+    '.login-panel sl-button[variant="primary"]'
+  );
+
+  openButton.addEventListener("click", () => drawer.show());
+  openButton2.addEventListener("click", () => drawer.show());
+  closeButton.addEventListener("click", () => drawer.hide());
+
+  // import appwrite
   import { Client, Databases, ID, Query, Account } from "appwrite";
+  // import js cookie to read / write cookies
   import Cookies from "js-cookie";
+
   console.log("cookies", Cookies);
+  console.log("login cookie", Cookies.get("login"));
+  // create loginStatus to handle login
   class LoginStatus extends EventTarget {
     _loggedIn;
     constructor(isLoggedIn) {
       super();
+      if (isLoggedIn === undefined) {
+        isLoggedIn = false;
+      }
       this._loggedIn = isLoggedIn;
     }
-  }
 
+    set loginStatus(status) {
+      if (status === undefined) {
+        status = false;
+      }
+      this._loggedIn = status;
+      console.log("LOGINSTATUS change:", this._loggedIn);
+      Cookies.set("login", this._loggedIn);
+
+      if (status === "loggedIn") {
+        const account = new Account(client);
+        const promise_acct = account.get();
+        promise_acct.then(
+          function (resp) {
+            document.querySelector("#c_user").innerHTML = resp.name;
+            document.querySelector("#curr_user").innerHTML = resp.name;
+          },
+          function (err) {
+            console.log("get account error:", err);
+          }
+        );
+      } else if (status === "loggedOut") {
+        document.querySelector("#c_user").innerHTML = "(none)";
+        document.querySelector("#curr_user").innerHTML = "(none)";
+      }
+    }
+
+    get loginStatus() {
+      return this._loggedIn;
+    }
+  }
+  //create instance
+  let myLoginStatus = new LoginStatus(Cookies.get("login"));
+  console.log("myLoginStatus: ", myLoginStatus.loginStatus);
+
+  // add event listeners
+
+  myLoginStatus.addEventListener("login", (e) => {
+    myLoginStatus.loginStatus = e.detail;
+  });
+
+  // create client object from appwrite
   const client = new Client();
   console.log("client:", client);
 
+  // set up appwrite client
   client
     .setEndpoint("https://appwrite.denweaver.com/v1") // Your API Endpoint
     .setProject(import.meta.env.PUBLIC_PROJECT_ID); // Your project ID
 
-  Cookies.set("loggedIn", "false");
-  console.log(Cookies.get("loggedIn"));
+  //subscribe to all account events
+  client.subscribe("account", (response) => {
+    // Callback will be executed on all account events.
+    console.log("subscribed account event:", response);
+  });
+  //  Cookies.set("loggedIn", "false");
+  //  console.log(Cookies.get("loggedIn"));
+
+  // Handle Log In
+  const handleUserLogin = (e) => {
+    console.log("handleUserLogin");
+    e.preventDefault();
+    const account = new Account(client);
+    const emailID = document.getElementById("email").value;
+    const pwdID = document.getElementById("password").value;
+    const promise = account.createEmailSession(emailID, pwdID);
+
+    promise.then(
+      function (response) {
+        console.log(response); // Success
+        console.log("acct login success");
+        // location.hash = "loggedin";
+        let event = new CustomEvent("login", { detail: "loggedIn" });
+        myLoginStatus.dispatchEvent(event);
+      },
+      function (error) {
+        console.log(error); // Failure
+        console.log("acct login failure - error");
+        let event = new CustomEvent("login", { detail: "loggedOut" });
+        myLoginStatus.dispatchEvent(event);
+      }
+    );
+  };
+
+  // Handle Registration
+  const handleUserRegistration = (e) => {
+    e.preventDefault();
+    console.log("handleUserRegistration");
+    const account = new Account(client);
+
+    const regid = document.getElementById("regname").value;
+    const regemail = document.getElementById("regemail").value;
+    const regpwd = document.getElementById("regpwd").value;
+    const promise = account.create(ID.unique(), regemail, regpwd, regid);
+
+    promise.then(
+      function (response) {
+        console.log("acct reg success");
+        console.log(response); // Success
+        let event = new CustomEvent("login", { detail: "registered" });
+        myLoginStatus.dispatchEvent(event);
+      },
+      function (error) {
+        console.log("acct reg error");
+        console.log(error); // Failure
+        let event = new CustomEvent("login", { detail: "regError" });
+        myLoginStatus.dispatchEvent(event);
+      }
+    );
+  };
+
+  // Handle Log Out
+  const handleUserLogout = (e) => {
+    console.log("handleUserLogout");
+    const account = new Account(client);
+    const promise = account.deleteSession("current");
+
+    promise.then(
+      function (response) {
+        console.log(response); // Success
+        //location.hash = "loggedout";
+        console.log("acct: loggedout");
+        let event = new CustomEvent("login", { detail: "loggedOut" });
+        myLoginStatus.dispatchEvent(event);
+      },
+      function (error) {
+        console.log("acct logout failure");
+        console.log(error); // Failure
+        let event = new CustomEvent("login", { detail: "loggedError" });
+        myLoginStatus.dispatchEvent(event);
+      }
+    );
+  };
+
+  window.addEventListener("DOMContentLoaded", function () {
+    // Code to be executed on page load
+    document.getElementById("login").addEventListener("click", function (e) {
+      // Code to be executed when the button is clicked
+      handleUserLogin(e);
+    });
+
+    document.getElementById("register").addEventListener("click", function (e) {
+      // Code to be executed when the button is clicked
+      handleUserRegistration(e);
+    });
+
+    document.getElementById("logout").addEventListener("click", function (e) {
+      // Code to be executed when the button is clicked
+      handleUserLogout(e);
+    });
+
+    // ok let's try to see if we are already logged in
+
+    const account = new Account(client);
+    const promise_acct = account.get();
+
+    promise_acct.then(
+      function (response) {
+        console.log("get account:", response);
+        // document.getElementById("curr_user").innerHTML = response.name;
+        // location.hash = "loggedin";
+        console.log("acct: loggedin");
+        let event = new CustomEvent("login", { detail: "loggedIn" });
+        myLoginStatus.dispatchEvent(event);
+      },
+      function (error) {
+        console.log("get account error:", error);
+        // location.hash = "loggedout";
+        console.log("acct: loggedout");
+        let event = new CustomEvent("login", { detail: "loggedOut" });
+        myLoginStatus.dispatchEvent(event);
+      }
+    );
+  });
 </script>
 
-<p>Login - event emitter version</p>
+<style>
+  form {
+    border: 1px solid black;
+    padding: 6px;
+  }
+
+  .panel {
+    font-family: sans-serif;
+  }
+</style>
