@@ -2,8 +2,6 @@
 
 ---
 
-<script></script>
-
 <link
   rel="stylesheet"
   href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.8.0/cdn/themes/light.css"
@@ -135,6 +133,9 @@
           function (resp) {
             document.querySelector("#c_user").innerHTML = resp.name;
             document.querySelector("#curr_user").innerHTML = resp.name;
+            document
+              .querySelector(".denweaver-account")
+              .classList.add("loggedin");
           },
           function (err) {
             console.log("get account error:", err);
@@ -143,7 +144,12 @@
       } else if (status === "loggedOut") {
         document.querySelector("#c_user").innerHTML = "(none)";
         document.querySelector("#curr_user").innerHTML = "(none)";
+        document
+          .querySelector(".denweaver-account")
+          .classList.remove("loggedin");
       }
+
+      drawer.hide();
     }
 
     get loginStatus() {
@@ -303,5 +309,18 @@
 
   .panel {
     font-family: sans-serif;
+  }
+
+  .denweaver-account {
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  .denweaver-account .loggedin {
+    display: none;
+  }
+  .denweaver-account.loggedin .loggedin {
+    display: block;
+  }
+  .denweaver-account.loggedin .loggedout {
+    display: none;
   }
 </style>
