@@ -1,13 +1,14 @@
 ---
 import Login from "./Login.astro";
 import "../../public/style/left_column.css";
+import LoginEventEmitter from "./LoginEventEmitter.astro";
 ---
 
 <nav>
   <h3>Navigation</h3>
   <ul>
     <li><a href="/">Home</a></li>
-    <li><a class="login-button" href="javascript:void(0)">Login</a></li>
+    <li><LoginEventEmitter /></li>
     <li><a href="/about">About</a></li>
     <li><a href="/account">Account</a></li>
     <li><a href="/game">Game</a></li>
