@@ -1,0 +1,131 @@
+---
+
+---
+
+<div class="denweaver-profile-manager">
+  <b>Profile Manager</b>
+  <div class="loggedout">You are logged out - please log in.</div>
+  <div class="loggedin">
+    You're logged in. Do you have a profile yet? <button id="checkprofile"
+      >Check Profile</button
+    >
+    <div class="noprofile">
+      You don't have a profile yet, would you like to create one?
+    </div>
+    <div class="yesprofile">
+      You have a profile! Would you like to make changes?
+      <div class="denweaver-profile-details">
+        Character name: <input type="text" id="dw-char-name" />
+        <br />
+         Character description: <textarea rows="20" cols="80" id="dw-char-desc"
+        ></textarea>
+        <br />
+         Level: <span id="dw-char-level">?</span>
+        <br />
+         XP: <span id="dw-char-xp">?</span>
+        <br />
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  import Cookies from "js-cookie";
+
+  console.log("profile manager cookies", Cookies);
+  console.log("profile manager login cookie", Cookies.get("login"));
+
+  import { Client, Databases, ID, Query, Account } from "appwrite";
+
+  const checkProfile = () => {
+    const client = new Client();
+    const databases = new Databases(client);
+    const account = new Account(client);
+
+    client
+      .setEndpoint("https://appwrite.denweaver.com/v1") // Your API Endpoint
+      .setProject(import.meta.env.PUBLIC_PROJECT_ID); // Your project ID
+
+    const acct_promise = account.get();
+
+    acct_promise.then(
+      (user) => {
+        console.log("user", user);
+
+        const doc_promise = databases.listDocuments(
+          import.meta.env.PUBLIC_DATABASE_ID,
+          import.meta.env.PUBLIC_COLLECTION_ID_PROFILES,
+          [Query.equal("uid", [user.$id])]
+        );
+        doc_promise.then(
+          (response) => {
+            console.log("response", response);
+            if (response.documents.length > 0) {
+              console.log("we have a profile! ");
+              document
+                .querySelector(".denweaver-profile-manager")
+                .classList.add("profile");
+            } else {
+              console.log("we don't have a profile!");
+              document
+                .querySelector(".denweaver-profile-manager")
+                .classList.remove("profile");
+            }
+          },
+          (error) => {
+            console.log("error", error);
+          }
+        );
+      },
+      (error) => {
+        console.log("acct err", error);
+      }
+    );
+  };
+
+  window.addEventListener("DOMContentLoaded", function () {
+    document.querySelector("#checkprofile").addEventListener("click", (e) => {
+      checkProfile();
+    });
+
+    console.log("dom content loaded");
+    if (Cookies.get("login") === "loggedIn") {
+      console.log("profilemanager logged in ");
+      document
+        .querySelector(".denweaver-profile-manager")
+        .classList.add("loggedin");
+      //let pm = document.querySelector(".denweaver-profile-manager");
+      //console.log("pm", pm);
+    }
+  });
+</script>
+
+<style>
+  .denweaver-profile-manager .loggedin {
+    display: none;
+  }
+
+  .denweaver-profile-manager .loggedout {
+    display: block;
+  }
+
+  .denweaver-profile-manager.loggedin .loggedin {
+    display: block;
+  }
+  .denweaver-profile-manager.loggedin .loggedout {
+    display: none;
+  }
+  .denweaver-profile-manager .yesprofile {
+    display: none;
+  }
+
+  .denweaver-profile-manager.profile .yesprofile {
+    display: block;
+  }
+  .denweaver-profile-manager .noprofile {
+    display: block;
+  }
+
+  .denweaver-profile-manager.profile .noprofile {
+    display: none;
+  }
+</style>
