@@ -2,7 +2,7 @@
 
 ---
 
-<div class="denweaver-profile-manager">
+<div class="denweaver-profile-manager profileunk">
   <b>Profile Manager</b>
   <div class="loggedout">You are logged out - please log in.</div>
   <div class="loggedin">
@@ -11,6 +11,16 @@
     >
     <div class="noprofile">
       You don't have a profile yet, would you like to create one?
+      <div class="denweaver-profile-create">
+        Create a character name: <input type="text" id="dw-create-char-name" />
+        <br />
+         Create a character description: <textarea
+          rows="20"
+          cols="80"
+          id="dw-create-char-desc"></textarea>
+        <br />
+        <button id="dw-create-profile" disabled>Create Profle</button>
+      </div>
     </div>
     <div class="yesprofile">
       You have a profile! Would you like to make changes?
@@ -35,7 +45,15 @@
   console.log("profile manager cookies", Cookies);
   console.log("profile manager login cookie", Cookies.get("login"));
 
-  import { Client, Databases, ID, Query, Account } from "appwrite";
+  import {
+    Client,
+    Databases,
+    ID,
+    Query,
+    Account,
+    Permission,
+    Role,
+  } from "appwrite";
   const client = new Client();
   const databases = new Databases(client);
   const account = new Account(client);
@@ -91,6 +109,10 @@
                 .querySelector(".denweaver-profile-manager")
                 .classList.add("profile");
 
+              document
+                .querySelector(".denweaver-profile-manager")
+                .classList.remove("profileunk");
+
               document.querySelector("#dw-char-name").value =
                 response.documents[0].char_name;
               document.querySelector("#dw-char-desc").value =
@@ -106,6 +128,10 @@
               document
                 .querySelector(".denweaver-profile-manager")
                 .classList.remove("profile");
+
+              document
+                .querySelector(".denweaver-profile-manager")
+                .classList.remove("profileunk");
             }
           },
           (error) => {
@@ -119,15 +145,100 @@
     );
   };
 
+  const checkCreate = () => {
+    console.log("checking if I can enable the create button yet!");
+    const charNameField = document.querySelector("#dw-create-char-name");
+    const charDescField = document.querySelector("#dw-create-char-desc");
+    const createProfileBtn = document.querySelector("#dw-create-profile");
+
+    if (charNameField.value !== "" && charDescField.value !== "") {
+      console.log("enable button!");
+      createProfileBtn.removeAttribute("disabled");
+    } else {
+      console.log("disable button!");
+      createProfileBtn.setAttribute("disabled", "disabled");
+    }
+  };
+
+  const createProfile = () => {
+    console.log("createProfile triggered");
+    let cr_char_name = document.querySelector("#dw-create-char-name").value;
+    let cr_char_desc = document.querySelector("#dw-create-char-desc").value;
+    let user_id = null;
+    // if (user_id === null) {
+    //   console.log("user_id", user_id);
+    //   return;
+    // }
+
+    const acct_promise = account.get();
+
+    acct_promise.then(
+      (resp) => {
+        user_id = resp.$id;
+        console.log("user_id: ", user_id);
+        const create_profile_promise = databases.createDocument(
+          import.meta.env.PUBLIC_DATABASE_ID,
+          import.meta.env.PUBLIC_COLLECTION_ID_PROFILES,
+          ID.unique(),
+          {
+            char_name: cr_char_name,
+            desc: cr_char_desc,
+            uid: user_id,
+            level: 0,
+            xp: 0,
+          },
+          [
+            Permission.read(Role.user(user_id)),
+            Permission.update(Role.user(user_id)),
+          ]
+        );
+
+        create_profile_promise.then(
+          (resp) => {
+            console.log("success response", resp);
+            window.location.reload();
+          },
+          (err) => {
+            console.log("failure response err", err);
+          }
+        );
+      },
+      (err) => {
+        console.log("account get error:", err);
+      }
+    );
+  };
+  // let's start things off
   window.addEventListener("DOMContentLoaded", function () {
     document.querySelector("#checkprofile").addEventListener("click", (e) => {
       checkProfile();
     });
 
-    this.document
+    document
       .querySelector("#dw-profile-update")
       .addEventListener("click", (e) => {
         updateProfile();
+      });
+
+    document
+      .querySelector("#dw-create-char-name")
+      .addEventListener("change", () => {
+        console.log("change event!");
+        checkCreate();
+      });
+
+    document
+      .querySelector("#dw-create-char-desc")
+      .addEventListener("change", () => {
+        console.log("change event");
+        checkCreate();
+      });
+
+    document
+      .querySelector("#dw-create-profile")
+      .addEventListener("click", () => {
+        console.log("try to create a profile!");
+        createProfile();
       });
 
     console.log("dom content loaded");
@@ -166,6 +277,10 @@
   }
   .denweaver-profile-manager .noprofile {
     display: block;
+  }
+
+  .denweaver-profile-manager.profileunk .noprofile {
+    display: none;
   }
 
   .denweaver-profile-manager.profile .noprofile {
