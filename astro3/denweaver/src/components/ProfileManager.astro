@@ -24,6 +24,7 @@
         <br />
          XP: <span id="dw-char-xp">?</span>
         <br />
+        <button id="dw-profile-update">Update Deets</button>
       </div>
     </div>
   </div>
@@ -35,16 +36,41 @@
   console.log("profile manager login cookie", Cookies.get("login"));
 
   import { Client, Databases, ID, Query, Account } from "appwrite";
+  const client = new Client();
+  const databases = new Databases(client);
+  const account = new Account(client);
+  let profileId = null;
+
+  client
+    .setEndpoint("https://appwrite.denweaver.com/v1") // Your API Endpoint
+    .setProject(import.meta.env.PUBLIC_PROJECT_ID); // Your project ID
+
+  const updateProfile = () => {
+    console.log("updateProfile:");
+    let char_name = document.querySelector("#dw-char-name").value;
+    let desc = document.querySelector("#dw-char-desc").value;
+
+    const update_promise = databases.updateDocument(
+      import.meta.env.PUBLIC_DATABASE_ID,
+      import.meta.env.PUBLIC_COLLECTION_ID_PROFILES,
+      profileId,
+      {
+        desc,
+        char_name,
+      }
+    );
+
+    update_promise.then(
+      (resp) => {
+        console.log("update profile resp", resp);
+      },
+      (err) => {
+        console.log("update profile errr", err);
+      }
+    );
+  };
 
   const checkProfile = () => {
-    const client = new Client();
-    const databases = new Databases(client);
-    const account = new Account(client);
-
-    client
-      .setEndpoint("https://appwrite.denweaver.com/v1") // Your API Endpoint
-      .setProject(import.meta.env.PUBLIC_PROJECT_ID); // Your project ID
-
     const acct_promise = account.get();
 
     acct_promise.then(
@@ -64,6 +90,17 @@
               document
                 .querySelector(".denweaver-profile-manager")
                 .classList.add("profile");
+
+              document.querySelector("#dw-char-name").value =
+                response.documents[0].char_name;
+              document.querySelector("#dw-char-desc").value =
+                response.documents[0].desc;
+              document.querySelector("#dw-char-level").innerHTML =
+                response.documents[0].level;
+              document.querySelector("#dw-char-xp").innerHTML =
+                response.documents[0].xp;
+
+              profileId = response.documents[0].$id;
             } else {
               console.log("we don't have a profile!");
               document
@@ -86,6 +123,12 @@
     document.querySelector("#checkprofile").addEventListener("click", (e) => {
       checkProfile();
     });
+
+    this.document
+      .querySelector("#dw-profile-update")
+      .addEventListener("click", (e) => {
+        updateProfile();
+      });
 
     console.log("dom content loaded");
     if (Cookies.get("login") === "loggedIn") {
