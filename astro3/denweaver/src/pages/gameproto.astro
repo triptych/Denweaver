@@ -1,19 +1,33 @@
 ---
 
 ---
+
 <script>
-// import kaboom lib
-import kaboom from "https://unpkg.com/kaboom@3000.0.1/dist/kaboom.mjs";
+  // import kaboom lib
+  import kaboom from "https://unpkg.com/kaboom@3000.0.1/dist/kaboom.mjs";
+  // import { client, account } from "../../public/js/client.js";
 
-import { loadGameScene } from "../../public/js/game/game_scene.js";
+  import { loadGameScene } from "../../public/js/game/game_scene.js";
 
-// initialize kaboom context
-kaboom();
-loadGameScene();
-// add a piece of text at position (120, 80)
-add([
-    text("hello"),
-    pos(120, 80),
-]);
+  // initialize kaboom context
+  kaboom();
+ // loadSprite("apple", "https://kaboomjs.com/sprites/apple.png");
+ // loadSprite("castle", "../../public/img/logo1.png");
+  loadGameScene();
+  // add a piece of text at position (120, 80)
+ // add([text("hello"), pos(120, 80)]);
+ // add([sprite("apple")]);
+ // const castle = add([
+ //   sprite("castle"),
+ //   scale(0.3),
+ //   rotate(0),
+ //   anchor("center"),
+ //   pos(100,100)
+  //  ]);
+
+ //castle.onUpdate(()=>{
+ //   castle.angle += 120 * dt();
+ //})
+
 </script>
 <b>Kaboom Test</b>
