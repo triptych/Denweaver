@@ -47,7 +47,6 @@ export const loadGameScene = () => {
         ],
         "+": () => [
           sprite("floor"),
-          area(),
           anchor('center')
         ],
         "@": () => [
@@ -61,13 +60,16 @@ export const loadGameScene = () => {
 
     // const player = level.get("player")[0];
 
+    /** **/
     const player = level.spawn([
       sprite('char'),
       area(),
       body(),
       anchor("center"),
       "player"
-    ], 2,2)
+    ], 2, 2);
+/**/
+
     const dirs = {
       left: LEFT,
       right: RIGHT,
@@ -86,6 +88,15 @@ export const loadGameScene = () => {
       });
     }
 
+
+    player.onUpdate(() => {
+      camPos(player.pos);
+    });
+
+    player.onPhysicsResolve(() => {
+      // Set the viewport center to player.pos
+      camPos(player.pos);
+    });
 
   });
 
