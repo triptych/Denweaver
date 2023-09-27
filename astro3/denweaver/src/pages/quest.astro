@@ -1,8 +1,34 @@
 ---
 const response = await fetch('https://raw.githubusercontent.com/triptych/opera-omnia/main/src/items/treasure.json')
 const data = await response.json();
-const item = data.items[0];
+const item = data.items[Math.floor(Math.random() * data.items.length)];
+
+const getQuest = await fetch('https://raw.githubusercontent.com/triptych/opera-omnia/main/src/situations/quests.json');
+const questData = await getQuest.json();
+const questText = questData.items[Math.floor(Math.random() * questData.items.length)]
+
+
 ---
 
-<h1>Fetch Test!</h1>
-<b>First item: {item}</b>
+
+<h1>Your Daily Quest</h1>
+<p>Hello! Here is your daily quest: <span>{questText}</span></p>
+<p>Click <button class="do-quest">Here</button> to complete the quest!</p>
+<p class="reward"> Your reward: {item} </p>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelector('.do-quest').addEventListener('click', (e)=>{
+    document.querySelector('.reward').classList.add('show')
+  })
+});
+
+</script>
+<style>
+    .reward {
+        display: none;
+    }
+    .reward.show{
+        display:block;
+    }
+</style>
